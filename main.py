@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import pandas as pd
 import joblib
 import psycopg2
+import requests
 from datetime import date
 
 # Carga el modelo
@@ -24,6 +25,9 @@ features = [
     "Torque_Nm",
     "Cutting_kN"
 ]
+
+# Webhook de Slack
+SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL")
 
 # Configuración de conexión a PostgreSQL 
 DB_CONFIG = {
@@ -70,6 +74,16 @@ def predict(input_data: InputData):
             values.append(val.item())  
         else:
             values.append(val)
+
+     # Enviar notificación si hay predicción de falla
+    if pred == 1 and SLACK_WEBHOOK_URL:
+        mensaje = f":warning: *¡FALLA DETECTADA!* :warning:\n\n"
+        mensaje += "\n".join([f"*{k}*: {v}" for k, v in input_data.dict().items()])
+        payload = {"text": mensaje}
+        try:
+            requests.post(SLACK_WEBHOOK_URL, json=payload)
+        except Exception as e:
+            print(f"Error enviando a Slack: {e}")
 
     # Insertar en PostgreSQL
     try:
