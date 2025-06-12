@@ -18,3 +18,7 @@ El modelo fue entrenado utilizando datos históricos de sensores industriales. S
 - "Torque(Nm)" - el torque generado por la máquina.
 - "Cutting(KN)" - la fuerza de corte de la herramienta.
 - "Downtime" - indicador de si la máquina estuvo fuera de servicio o no en el día registrado.
+
+## 🧪 Simulación de datos
+
+Este repositorio incluye un script y datos de ejemplo generados con CTGAN para simular el envío de datos hacia la API, permitiendo probar su funcionamiento en un entorno controlado.
